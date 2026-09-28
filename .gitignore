@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Editors
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Logs / temporary files
+logs/
+tmp/
+outputs/
+
+# Model outputs/checkpoints
+*.pth
+*.pt
+*.ckpt
+
+# Local datasets
+data/
+datasets/
+
+# Large generated files
+*.bag
+*.db3

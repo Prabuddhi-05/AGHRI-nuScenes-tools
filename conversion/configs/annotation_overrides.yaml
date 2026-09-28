@@ -1,0 +1,23 @@
+scenes:
+  footpath1_p2_oj+gl_1walk+check_st_11_12_2024_1_label:
+    selected: annotations/lidar_ann.json
+    reason: >-
+      The only LiDAR annotation candidate is authoritative. Thirty-nine rows
+      contain accidental decimal PNG-style File strings; the source recording
+      has exactly 39 otherwise-unreferenced PCDs and a unique timestamp
+      bijection within 212 ns. References are repaired only in converter
+      memory; this source JSON is never modified.
+    expected_sha256: ff3eb8f0b2cd92ce094051b7447261255d52f401c98ebe981fd106e354e14442
+    filename_reference_repair:
+      type: unique_nearest_pcd_by_decimal_timestamp
+      source_suffix: .png
+      maximum_absolute_delta_ns: 1000
+      expected_repaired_records: 39
+      require_all_pcds_covered: true
+  in_straw_3push_diff_mv_11_07_2024_1_label:
+    selected: annotations/lidar_ann.json
+    reason: >-
+      Reviewed corrected content has replaced the primary lidar_ann.json; the
+      extracted scene contains no second LiDAR annotation candidate. This is
+      the standard-name corrected primary documented in the 2026-08-20 audit.
+    expected_sha256: 39569e979e0f84965b39d3514eaee430f7c48b876b99d8977dbc836198f3afc5

@@ -1,0 +1,91 @@
+version: v1.0-aghri
+input_version: v1.0-aghri-lidar-full-staging
+uuid_namespace: "6c6048e7-faae-5ac2-9b87-1bde14850348"
+
+camera_channels:
+  - channel: cam_zed_rgb
+    source_path: sensor_data/cam_zed_rgb
+    extensions: [.png, .jpg, .jpeg]
+    optical_frame: front_left_camera_optical_frame
+    camera_model: pinhole
+    distortion_model: rational_polynomial
+    coefficient_order: [k1, k2, p1, p2, k3, k4, k5, k6]
+    image_state: raw
+    image_state_evidence:
+      - intrinsics.json declares rational_polynomial D and K for the raw distorted image
+      - prior AGHRI camera_geometry_audit identifies the 672x376 source as raw
+      - AGHRI undistortion tooling writes separate *_undistorted folders; none exists here
+    calibration_source: calibration/intrinsics.json
+  - channel: cam_fish_front
+    source_path: sensor_data/cam_fish_front
+    extensions: [.png, .jpg, .jpeg]
+    optical_frame: fish_front_camera_link_optical
+    camera_model: fisheye
+    distortion_model: equidistant
+    coefficient_order: [k1, k2, k3, k4]
+    image_state: raw
+    image_state_evidence:
+      - intrinsics.json declares the native equidistant model and D
+      - prior AGHRI camera_geometry_audit validates native equidistant projection
+      - AGHRI undistortion tooling writes separate *_undistorted folders; none exists here
+    calibration_source: calibration/intrinsics.json
+  # Side-camera frame names below follow the physically corrected extrinsics.json association.
+  - channel: cam_fish_left
+    source_path: sensor_data/cam_fish_left
+    extensions: [.png, .jpg, .jpeg]
+    optical_frame: fish_left_camera_link_optical
+    camera_model: fisheye
+    distortion_model: equidistant
+    coefficient_order: [k1, k2, k3, k4]
+    image_state: raw
+    image_state_evidence:
+      - intrinsics.json declares the native equidistant model and D
+      - prior AGHRI camera_geometry_audit validates native equidistant projection
+      - AGHRI undistortion tooling writes separate *_undistorted folders; none exists here
+    calibration_source: calibration/intrinsics.json
+  - channel: cam_fish_right
+    source_path: sensor_data/cam_fish_right
+    extensions: [.png, .jpg, .jpeg]
+    optical_frame: fish_right_camera_link_optical
+    camera_model: fisheye
+    distortion_model: equidistant
+    coefficient_order: [k1, k2, k3, k4]
+    image_state: raw
+    image_state_evidence:
+      - intrinsics.json declares the native equidistant model and D
+      - prior AGHRI camera_geometry_audit validates native equidistant projection
+      - AGHRI undistortion tooling writes separate *_undistorted folders; none exists here
+    calibration_source: calibration/intrinsics.json
+
+calibration:
+  intrinsics: calibration/intrinsics.json
+  extrinsics: calibration/extrinsics.json
+  ego_frame: base_link
+  transform_notation: T_base_link_camera maps optical-camera points into base_link
+  quaternion_order: [w, x, y, z]
+
+pose:
+  source: metadata/odom_global.jsonl
+  map_odom_tf: metadata/tf/map__to__odom.jsonl
+  odom_base_tf: metadata/tf/odom__to__base_link.jsonl
+  maximum_bracket_ms: 100.0
+  tf_composition_translation_tolerance_m: 1.0e-3
+  tf_composition_rotation_tolerance_rad: 1.0e-3
+
+synchronization:
+  anchor: lidar
+  thresholds_s: [0.10, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30, 0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40, 0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.50]
+  p95_limit_s: 0.05
+  plateau_eps: 0.2
+  one_to_one: true
+  enforce_monotonic: true
+  public_timestamp_policy: original_camera_timestamp
+  offset_usage: temporary_matching_only
+  sweep_max_following_gap_uses_chosen_threshold: true
+
+projection_validation:
+  lidar_stride: 3
+  minimum_positive_depth_points: 100
+  minimum_in_image_points: 50
+  render_positions: [first_complete, middle_complete, last_complete]
+  pinhole_comparison_position: middle_complete

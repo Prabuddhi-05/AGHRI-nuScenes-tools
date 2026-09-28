@@ -1,0 +1,52 @@
+version: v1.0-aghri-lidar-full-staging
+uuid_namespace: "6c6048e7-faae-5ac2-9b87-1bde14850348"
+
+frames:
+  lidar: front_lidar_link
+  ego: base_link
+  global: sequence-local map rebased at first accepted pose
+  axes: x-forward, y-left, z-up
+  units: metres
+
+point_output:
+  dtype: little-endian-float32
+  columns: [x, y, z, placeholder_intensity, placeholder_feature]
+  placeholder_values: [0.0, 0.0]
+
+box_policy:
+  source_layout: [center_x, center_y, center_z, extent_x, extent_y, extent_z, source_rot_x, source_rot_y, source_rot_z]
+  source_rotation: identity
+  output_size_order: [extent_y, extent_x, extent_z]
+  point_boundary_tolerance_m: 1.0e-6
+
+pose:
+  source: metadata/odom_global.jsonl
+  map_odom_tf: metadata/tf/map__to__odom.jsonl
+  odom_base_tf: metadata/tf/odom__to__base_link.jsonl
+  maximum_bracket_ms: 100.0
+  tf_composition_translation_tolerance_m: 1.0e-3
+  tf_composition_rotation_tolerance_rad: 1.0e-3
+
+calibration:
+  source: calibration/extrinsics.json
+  required_parent: base_link
+  required_child: front_lidar_link
+  expected_translation_m: [0.615, 0.28, 0.33]
+  expected_rotation_wxyz: [1.0, 0.0, 0.0, 0.0]
+  comparison_tolerance: 1.0e-12
+
+sensor_channels:
+  - {channel: lidar, modality: lidar}
+  - {channel: cam_zed_rgb, modality: camera}
+  - {channel: cam_zed_depth, modality: camera}
+  - {channel: cam_fish_front, modality: camera}
+  - {channel: cam_fish_left, modality: camera}
+  - {channel: cam_fish_right, modality: camera}
+
+locations:
+  in_straw: inside_strawberry
+  out_straw: outside_strawberry
+  in_vine: inside_vineyard
+  out_vine: outside_vineyard
+  footpath1: footpath_1
+  footpath2: farmside
