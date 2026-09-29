@@ -21,6 +21,7 @@ The converted dataset and pre-generated PKLs are maintained separately in the **
 | AGHRI-to-nuScenes-style release | [AGHRI-nuScenes-release](https://github.com/Prabuddhi-05/AGHRI-nuScenes-release) |
 | Conversion and PKL-generation tools | [AGHRI-nuScenes-tools](https://github.com/Prabuddhi-05/AGHRI-nuScenes-tools) |
 | General AGHRI dataset tools | [LCAS/AGHRI-dataset-tools](https://github.com/LCAS/AGHRI-dataset-tools) |
+| BEVFusion adaptation for AGHRI | [AGHRI-BEVFusion](https://github.com/Prabuddhi-05/AGHRI-BEVFusion) |
 
 > **Important:** The original AGHRI dataset and the converted sensor payloads are not stored in this tools repository. Download the original AGHRI data from the official dataset record to run a new conversion, or download the converted AGHRI-to-nuScenes-style release if you only need the prepared dataset and PKLs.
 
