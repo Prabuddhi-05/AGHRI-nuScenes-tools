@@ -75,7 +75,9 @@ AGHRI_nuScenes_camera_lidar_full/
         └── ...
 ```
 
-The `metadata/synchronization/` files are runtime metadata used by the PKL generator. They are part of the converted representation rather than optional diagnostic reports.
+The `metadata/synchronization/` files are runtime metadata used by the PKL generator. They are part of the converted representation rather than optional diagnostic reports. The conversion also writes `manifests/source_to_scene.json`, which maps each public `aghri-scene-XXXX` identifier to its original recording name. Reports and other manifests record conversion checks; they are not needed as dataset loader inputs.
+
+For a simple lookup, [`scene_name_map.csv`](scene_name_map.csv) records the 65 public scene names and original AGHRI recording names from the verified conversion. It is a reference file in this tools repository, not a converter input or a required dataset file. The generated `manifests/source_to_scene.json` is the mapping for the dataset produced by each conversion run.
 
 ---
 
@@ -89,6 +91,8 @@ The completed conversion contains:
 | Train / validation / test scenes | 52 / 7 / 6 |
 | LiDAR-anchored samples | 13,605 |
 | `sample_data` records | 141,305 |
+| Files in `samples/` | 66,473 |
+| Files in `sweeps/` | 74,832 |
 | 3D human annotations | 26,637 |
 | Tracked human instances | 136 |
 
@@ -217,7 +221,7 @@ Conceptually:
 sensor frame → AGHRI base_link ego frame
 ```
 
-The table stores sensor translation and rotation and, for cameras, the intrinsic matrix required by downstream projection code.
+The table stores sensor translation and rotation and, for cameras, the intrinsic matrix required by downstream projection code. The left and right fisheye channels use the optical-frame associations declared in `conversion/configs/camera_lidar.yaml`; the converter reads their extrinsics from the extracted AGHRI `calibration/extrinsics.json`. Check that the source calibration is the intended corrected version when comparing outputs with earlier converted datasets.
 
 Quaternions use:
 
@@ -544,7 +548,7 @@ The sequence-local global frame is rebased at the first accepted pose for each c
 
 ## 9. Samples and Sweeps
 
-In this AGHRI-to-nuScenes-style representation:
+In this AGHRI-to-nuScenes-style representation, the converter creates both payload directories directly under its output root:
 
 - `samples/` contains main sensor captures associated with key samples;
 - `sweeps/` contains additional accepted camera captures between keyframes;

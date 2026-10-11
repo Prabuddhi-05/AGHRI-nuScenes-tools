@@ -398,23 +398,23 @@ This allows downstream users to inspect the timing quality associated with a sel
 
 The PKLs store sensor paths relative to the AGHRI-to-nuScenes-style dataset root.
 
-Therefore a downloaded or moved dataset does **not** require PKL regeneration solely because its absolute filesystem location changes.
-
-For example, a downstream loader can point its root to:
+Therefore moving the converted dataset does **not** require PKL regeneration solely because its absolute filesystem location changes. A downstream loader should point to `AGHRI_DATASET_ROOT`, for example:
 
 ```text
-/path/to/AGHRI-nuScenes-release/dataset
+/path/to/aghri_nuscenes_run/AGHRI_nuScenes_camera_lidar_full
 ```
 
-provided that the internal relative structure is preserved:
+Keep the internal relative structure:
 
 ```text
-dataset/
+AGHRI_nuScenes_camera_lidar_full/
 ├── samples/
 ├── sweeps/
 ├── v1.0-aghri/
-└── metadata/
+└── metadata/synchronization/
 ```
+
+Generated PKLs are stored separately under `AGHRI_PKL_OUTPUT_ROOT`; for BEVFusion, pass that location as `--pkl-root`. Newly generated PKLs are not guaranteed to be byte-identical to PKLs produced by earlier conversion runs, so validate calibration and PKL provenance when comparing published results.
 
 ---
 
